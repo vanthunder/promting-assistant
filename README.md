@@ -1,7 +1,7 @@
 # Prompting Assistant
 
 **Author**: Marvin Schubert  
-**License**: MIT or another license of your choice (update as needed).  
+**License**: MIT  
 
 ## Description
 
