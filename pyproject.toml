@@ -1,0 +1,26 @@
+# pyproject.toml
+# ---------------------------------------------------------------------
+# Author: Marvin Schubert
+# © 2025, Marvin Schubert. All rights reserved.
+#
+# Description:
+# Minimal pyproject.toml for Poetry-based builds.
+# ---------------------------------------------------------------------
+
+[tool.poetry]
+name = "prompting-assistant"
+version = "0.1.0"
+description = "A PySide6 application to scan folder structures and optionally show .py, Docker, and .toml content."
+authors = ["Marvin Schubert <your-email@example.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pyside6 = "^6.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
