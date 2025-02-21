@@ -62,10 +62,6 @@ class FileScanner:
         """
         Recursively builds an ASCII tree of the directory structure
         and collects relevant file contents (Python classes, Docker, .toml).
-        
-        :param path: Current directory to scan. Defaults to root_folder if empty.
-        :param prefix: Current prefix for the ASCII tree lines.
-        :return: A tuple (tree_string, combined_file_contents).
         """
         if not path:
             path = self.root_folder
@@ -88,14 +84,23 @@ class FileScanner:
             if self.progress_callback:
                 self.progress_callback(self.processed_count)
 
-            # Skip venv folders if requested
-            if (
-                self.settings.skip_venv and
-                os.path.isdir(full_path) and
-                entry.lower() in self.venv_names
-            ):
+            lower_entry = entry.lower()
+
+            # Skip .git (falls eingestellt)
+            if self.settings.skip_git and lower_entry.startswith('.git'):
+                continue
+
+            # Skip venv (falls eingestellt)
+            if self.settings.skip_venv and os.path.isdir(full_path) and lower_entry in self.venv_names:
                 tree_lines.append(f"{prefix}{connector}{entry} [venv skipped]")
                 continue
+
+            # Skip Python-Aux-Dateien
+            if self.settings.skip_python_aux:
+                # Liste an unerwünschten Endungen
+                python_aux_exts = (".pyc", ".pyo", ".pyd")
+                if lower_entry.endswith(python_aux_exts):
+                    continue
 
             tree_lines.append(f"{prefix}{connector}{entry}")
 
@@ -109,7 +114,6 @@ class FileScanner:
                     file_contents.append(sub_content)
             else:
                 # If it's a file, possibly parse content
-                lower_entry = entry.lower()
                 # Python
                 if lower_entry.endswith(".py") and self.settings.show_py_content:
                     py_classes = extract_python_classes(full_path)
